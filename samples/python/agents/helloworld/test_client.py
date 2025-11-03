@@ -1,4 +1,5 @@
 import logging
+import os
 
 from typing import Any
 from uuid import uuid4
@@ -25,7 +26,8 @@ async def main() -> None:
 
     # --8<-- [start:A2ACardResolver]
 
-    base_url = 'http://localhost:9999'
+    port = os.environ.get('AGENT_PORT', '9999')
+    base_url = f'http://localhost:{port}'
 
     async with httpx.AsyncClient() as httpx_client:
         # Initialize A2ACardResolver

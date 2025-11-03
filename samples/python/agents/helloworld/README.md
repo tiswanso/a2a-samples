@@ -28,18 +28,34 @@ Agent can also be built using a container file.
 
 2. Build the container file
 
-    ```bash
-    podman build . -t helloworld-a2a-server
-    ```
+   a. via `podman`
+
+   ```bash
+   podman build . -t helloworld-a2a-server
+   ```
+
+   b. via `docker`
+
+   ```bash
+   docker build -t helloworld-a2a-server:latest .
+   ```
 
 > [!Tip]  
 > Podman is a drop-in replacement for `docker` which can also be used in these commands.
 
-3. Run you container
+3. Run the container
 
-    ```bash
-    podman run -p 9999:9999 helloworld-a2a-server
-    ```
+   a. via `podman`
+
+   ```bash
+   podman run -p 9999:9999 helloworld-a2a-server
+   ```
+
+   b. via `docker`
+
+   ```bash
+   docker run -it --rm -p 9999:9999 helloworld-a2a-server:latest
+   ```
 
 ## Validate
 
@@ -50,6 +66,25 @@ cd samples/python/hosts/cli
 uv run . --agent http://localhost:9999
 ```
 
+### Using helloworld/test_client.py
+
+```bash
+uv run test_client.py
+```
+
+### Notes on Using within a container runtime PaaS
+
+The `helloworld` agent will use environment variables to build the URL indicated
+in the `AgentCard`.
+
+```python
+agent_host = os.environ.get('AGENT_HOST', 'localhost')
+agent_port = os.environ.get('AGENT_PORT', '9999')
+agent_url = f'http://{agent_host}:{agent_port}/'
+```
+
+**NOTE:** The agent listens on the same port set in the `agent_url`.
+This requires ensuring that the container hosting platform exposes the public endpoint on the same port.
 
 ## Disclaimer
 Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
