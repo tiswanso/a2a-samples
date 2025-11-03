@@ -18,7 +18,16 @@ if __name__ == '__main__':
     # Read environment variables for host and port configuration
     agent_host = os.environ.get('AGENT_HOST', 'localhost')
     agent_port = os.environ.get('AGENT_PORT', '9999')
-    agent_url = f'http://{agent_host}:{agent_port}/'
+    agent_path = os.environ.get('AGENT_PATH', '')
+
+    # Build the agent URL with optional path
+    if agent_path:
+        # Ensure path starts with / and doesn't end with /
+        agent_path = agent_path if agent_path.startswith('/') else f'/{agent_path}'
+        agent_path = agent_path.rstrip('/')
+        agent_url = f'http://{agent_host}:{agent_port}{agent_path}/'
+    else:
+        agent_url = f'http://{agent_host}:{agent_port}/'
 
     # --8<-- [start:AgentSkill]
     skill = AgentSkill(
